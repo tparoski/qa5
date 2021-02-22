@@ -1,0 +1,23 @@
+{
+  "name": "vezbec",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cypress": "^6.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "./node_modules/.bin/cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tparoski/saleaMala.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tparoski/saleaMala/issues"
+  },
+  "homepage": "https://github.com/tparoski/saleaMala#readme"
+}
