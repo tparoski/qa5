@@ -7,6 +7,6 @@ module.exports = {
             var i=Math.floor(Math.random()*listaSlova.length);
             salt+=listaSlova[i];
         }
-        return salt+"@gmail.com";
+        return salt;
     }
 }

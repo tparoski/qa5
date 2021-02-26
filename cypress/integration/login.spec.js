@@ -1,21 +1,26 @@
-var helper = require ('../support/helper.js');
+var logIn = require ('../support/login.js');
+var faker = require('faker');
+import {LOGIN} from '../fixtures/constants';
 
 describe('Register', function () {
-    it('Visit gallery page', () => {
+    beforeEach(function(){
         cy.visit('/')
-    })
+        logIn.logInLink.click();
+    });
 
-    it('Click login', () => {
-        cy.get("a[href='/login']").click();
+    it('Empty', () => {
+        logIn.logInButton.click();
+    });
 
-    })
-    it('Click login', () => {
-        cy.get("input[type='email']").type("helper.getNCharactersLetters(5)");
-        cy.get("input[type='password']").type("test1234");
-        cy.get('button').click();
+    it('Wrong email', () => {
+        logIn.login(faker.internet.email(), LOGIN.PASSWORD);
+    });
+    
+    it('Wrong password', () => {
+        logIn.login(LOGIN.EMAIL, faker.internet.password());
+    });
 
-    })
-    it('Click logout', () => {
-        cy.get(".ml-auto > :nth-child(3) > .nav-link").click();
-    })
+    it('Success', () => {
+        logIn.login(LOGIN.EMAIL,LOGIN.PASSWORD);
+    });
 })

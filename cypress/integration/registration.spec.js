@@ -1,27 +1,68 @@
 var helper = require ('../support/helper.js');
+var registration = require ('../support/registration.js');
+var faker = require('faker');
+import {PASSWORD, UNICODE} from '../fixtures/constants'
 
 describe('Register', function () {
-    it('Visit registration page', () => {
+    beforeEach(function(){
         cy.visit('/')
-    })
-    it('Click regoister', () => {
-        cy.get("a[href='/register']").click();
+        registration.registerLink().click();
+    });
+  
+   
+    it('All empty fields', () => {
+        registration.submitButton.click();
+    });
 
-    })
-    it('Negative register', () => {
+    it('Spaces', () => {
+        registration.register("  ", "   ", "   ", PASSWORD.VALID, PASSWORD.VALID);
+    });
 
-        cy.get('button').click()
-    })
+    it('Minimum characters', () => {
+        registration.register(helper.getNCharactersLetters(1), helper.getNCharactersLetters(1), faker.internet.email(), PASSWORD.VALID, PASSWORD.VALID);
+    });
 
-    it('Fillout register', () => {
-        cy.reload()
-        cy.get("#first-name").clear().type("Test");
-        cy.get("#last-name").clear().type("Testeric");
-        cy.get("#email").clear().type(helper.getNCharactersLetters(5));
-        cy.get("#password").clear().type("test1234");
-        cy.get("#password-confirmation").clear().type("test1234");
-        cy.get('[type="checkbox"]').check()
-        cy.get('button').click()
+    it('Maximum characters', () => {
+        registration.register(helper.getNCharactersLetters(256), helper.getNCharactersLetters(256), faker.internet.email(), PASSWORD.VALID, PASSWORD.VALID);
+    });
 
-    })
-})
+    it('Email format', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), helper.getNCharactersLetters(5), PASSWORD.VALID, PASSWORD.VALID);
+    });
+
+    it('Confirm password does not match', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.VALID, "notValid");
+    });
+
+    it('Pass min characters', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.SHORT, PASSWORD.SHORT);
+    });
+
+    it('Pass only letters', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.LETTERS, PASSWORD.LETTERS);
+    });
+
+    it('Pass only numbers', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.NUMBERS, PASSWORD.NUMBERS);
+    });
+    it('Pass with spaces', () => {
+        registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.SPACE, PASSWORD.SPACE);
+    });
+
+    it('Exsisting email', () => {
+        var email = faker.internet.email();
+        registration.register(faker.name.firstName(), faker.name.lastName(), email, PASSWORD.VALID, PASSWORD.VALID);
+        registration.logOutButton.click();
+        registration.registerLink().click();
+        registration.register(faker.name.firstName(), faker.name.lastName(), email, PASSWORD.VALID, PASSWORD.VALID);
+    });
+   
+    it('Success', () => {
+       registration.register(faker.name.firstName(), faker.name.lastName(), faker.internet.email(), PASSWORD.VALID, PASSWORD.VALID);
+    });
+
+    it('Unicode characters', () => {
+       registration.register(UNICODE.NAME, UNICODE.SURNAME, faker.internet.email(), PASSWORD.VALID, PASSWORD.VALID);
+    });
+  
+});
